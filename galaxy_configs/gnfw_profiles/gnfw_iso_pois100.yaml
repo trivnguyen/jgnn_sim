@@ -1,0 +1,43 @@
+galaxy:
+  num_stars:
+    dist: poisson
+    mean: 100
+
+dm_potential:
+  type: Spheroid
+  parameters:
+    - name: alpha
+      dist: delta
+      value: 1
+    - name: beta
+      dist: delta
+      value: 3
+    - name: gamma  # the inner slope
+      dist: uniform
+      min: -1
+      max: 2
+    - name: r_dm  # the DM scale radius in kpc
+      dist: log_uniform
+      min: 0.01
+      max: 10.00
+    - name: rho_0  # the density normalization in Msun / kpc^3
+      dist: log_uniform
+      min: 1.0e+5
+      max: 1.0e+8
+
+stellar_density:
+  type: Plummer  # Plummer density
+  parameters:
+    - name: r_star  # ratio of Plummer scale radius to DM scale radius
+      dist: delta
+      value: 1
+
+distribution_function:
+  type: QuasiSpherical  # Osipkov-Merrit velocity anisotropy
+  parameters:
+    - name: beta0  # normalization for the OM velocity anistropy profile
+      dist: delta
+      value: 0
+    - name: r_a
+      dist: delta
+      value: 10000
