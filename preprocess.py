@@ -6,7 +6,7 @@ import os
 import time
 
 import numpy as np
-import scipy.optimize as opt
+# import scipy.optimize as opt
 import yaml
 from tqdm import tqdm
 from ml_collections import config_dict
@@ -97,8 +97,8 @@ def main(config: config_dict.ConfigDict,):
     for i in loop:
         # extract galaxy
         nodes, graph = utils.get_graph(node_features, graph_features, i)
-        pos = nodes['pos']
-        vel = nodes['vel']
+        pos = nodes['pos'].astype(np.float32)
+        vel = nodes['vel'].astype(np.float32)
         stellar_rstar = graph['stellar_r_star_r_dm'] * graph['dm_r_dm']
 
         # apply velocity cut on the 3d velocity

@@ -102,8 +102,14 @@ def write_graph_dataset(
 
         # write node features
         for key in node_features:
-            dset = f.create_dataset(key, data=node_features[key])
-            dset.attrs.update({'type': 'node_features'})
+            try:
+                dset = f.create_dataset(key, data=node_features[key])
+                # dset.attrs.update({'type': 'node_features'})
+            except Exception as e:
+                print(e)
+                print(key, node_features[key].shape, node_features[key])
+                print(node_features[key])
+                raise e
 
         # write tree features
         for key in graph_features:
@@ -196,7 +202,8 @@ def parse_parameters(
     if stellar_params.get('q') is not None:
         stellar_params['axisRatioY'] = stellar_params.pop('q')
     elif stellar_params.get('q_star_q_dm') is not None:
-        stellar_params['axisRatioY'] = (
+        stellar_par
+        ams['axisRatioY'] = (
             stellar_params.pop('q_star_q_dm') * dm_params['axisRatioY'])
     if stellar_params.get('p') is not None:
         stellar_params['axisRatioZ'] = stellar_params.pop('p')
@@ -314,6 +321,10 @@ def main():
         [posvels[i][:, :3] for i in range(len(posvels))])
     node_features['vel'] = np.concatenate(
         [posvels[i][:, 3:] for i in range(len(posvels))])
+
+    # make sure data type is float32
+    node_features['pos'] = node_features['pos'].astype(np.float32)
+    node_features['vel'] = node_features['vel'].astype(np.float32)
 
     # create graph features from parameters
     # Adding prefix to DataFrame column avoid name collisions
