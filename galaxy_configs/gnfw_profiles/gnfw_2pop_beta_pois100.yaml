@@ -1,0 +1,73 @@
+galaxy:
+  num_stars:
+    dist: poisson
+    mean: 100
+  # Fraction of stars drawn from population 1 (the less radially anisotropic one).
+  # Population 2 gets the remaining (1 - f) fraction.
+  # Constraint enforced in code: beta0_1 <= beta0_2 (pop 1 is always the less
+  # radially anisotropic / more tangentially anisotropic population).
+  mixture:
+    name: f
+    dist: uniform
+    min: 0.0
+    max: 1.0
+
+dm_potential:
+  type: Spheroid
+  parameters:
+    - name: alpha
+      dist: delta
+      value: 1
+    - name: beta
+      dist: delta
+      value: 3
+    - name: gamma       # inner logarithmic slope (0 = cored, 1 = NFW-like)
+      dist: uniform
+      min: -1
+      max: 2
+    - name: r_dm        # DM scale radius [kpc]
+      dist: log_uniform
+      min: 1.0e-2
+      max: 1.0e+2
+    - name: rho_0       # density normalisation [Msun / kpc^3]
+      dist: log_uniform
+      min: 1.0e+3
+      max: 1.0e+10
+
+stellar_density:
+  type: Plummer
+  parameters:
+    - name: r_star_r_dm   # Plummer scale radius as a fraction of r_dm
+      dist: log_uniform
+      min: 0.1
+      max: 1.0
+
+# ── Population 1 ─────────────────────────────────────────────────────────────
+# After sampling, beta0 values are sorted so that beta0_1 <= beta0_2.
+# Population 1 is therefore always the less radially anisotropic component.
+distribution_function_1:
+  type: QuasiSpherical     # Cuddeford–Osipkov–Merritt anisotropy profile
+  parameters:
+    - name: beta0          # central anisotropy; sorted min(beta0_raw_1, beta0_raw_2)
+      dist: uniform
+      min: -0.499
+      max: 0.999
+    - name: r_a_r_star     # anisotropy radius as a multiple of r_star (independent of pop 2)
+      dist: log_uniform
+      min: 0.1
+      max: 1000
+
+# ── Population 2 ─────────────────────────────────────────────────────────────
+# beta0_2 = max(beta0_raw_1, beta0_raw_2), so beta0_2 >= beta0_1 always.
+# r_a is sampled independently but still relative to the shared r_star.
+distribution_function_2:
+  type: QuasiSpherical
+  parameters:
+    - name: beta0          # central anisotropy; sorted max(beta0_raw_1, beta0_raw_2)
+      dist: uniform
+      min: -0.499
+      max: 0.999
+    - name: r_a_r_star     # anisotropy radius as a multiple of r_star (independent of pop 1)
+      dist: log_uniform
+      min: 0.1
+      max: 1000

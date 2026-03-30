@@ -1,7 +1,7 @@
 galaxy:
   num_stars:
-    dist: poisson
-    mean: 100
+    dist: delta
+    value: 1000
 
 dm_potential:
   type: Spheroid
@@ -30,7 +30,7 @@ stellar_density:
   parameters:
     - name: r_star_r_dm  # ratio of Plummer scale radius to DM scale radius
       dist: uniform
-      min: 0.2
+      min: 0.1
       max: 1.0
 
 distribution_function:

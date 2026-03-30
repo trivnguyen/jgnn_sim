@@ -16,7 +16,7 @@ def get_config():
     config.num_projection = [5, ]
     config.use_proper_motions = False
     config.min_vdisp = 0.1  # minimum velocity dispersion in km/s
-    config.max_vdisp = 50   # maximum velocity dispersion in km/s
+    config.max_vdisp = 100.   # maximum velocity dispersion in km/s
     config.min_radius_rstar = 0.  # minimum radius in units of r_star
     config.max_radius_rstar = 10   # maximum radius in units of r_star
     config.min_radius_kpc = 0.01  # minimum radius in kpc

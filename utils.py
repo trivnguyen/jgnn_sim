@@ -69,7 +69,6 @@ def project2d(pos, vel, axis=0, use_proper_motions=False):
         return pos_proj, vel[:, axis]
 
 
-
 def parse_graph_features(graph_features, norm_rstar=False):
     """ Parse graph features into training target """
 
@@ -108,6 +107,64 @@ def parse_graph_features(graph_features, norm_rstar=False):
     # normalize by the stellar radius
     if norm_rstar:
         for k in ['dm_log_r_dm', 'df_log_r_a', ]:
+            new_graph_features[k] -= new_graph_features['stellar_log_r_star']
+        new_graph_features['dm_log_rho_0'] -= (
+            new_graph_features['stellar_log_r_star'] * 3)
+    return new_graph_features
+
+
+def parse_graph_features_2beta(graph_features, norm_rstar=False):
+    """ Parse graph features into training target """
+
+    # create a copy of the graph features
+    new_graph_features = graph_features.copy()
+
+    # parse DM parameters
+    new_graph_features['dm_log_r_dm'] = np.log10(graph_features['dm_r_dm'])
+    new_graph_features['dm_log_rho_0'] = np.log10(graph_features['dm_rho_0'])
+
+    # parse stellar parameters
+    if graph_features.get('stellar_r_star') is not None:
+        new_graph_features['stellar_log_r_star'] = np.log10(
+            graph_features['stellar_r_star'])
+    elif graph_features.get('stellar_r_star_r_dm') is not None:
+        new_graph_features['stellar_log_r_star'] = (
+            np.log10(graph_features['stellar_r_star_r_dm'])
+            + new_graph_features['dm_log_r_dm'])
+    else:
+        raise ValueError('Cannot find stellar radius')
+
+    # parse DF1 parameters
+    if graph_features.get('df1_r_a') is not None:
+        new_graph_features['df1_log_r_a'] = np.log10(graph_features['df1_r_a'])
+    elif graph_features.get('df1_r_a_r_dm') is not None:
+        new_graph_features['df1_log_r_a'] = (
+            np.log10(graph_features['df1_r_a_r_dm'])
+            + new_graph_features['dm_log_r_dm'])
+    elif graph_features.get('df1_r_a_r_star') is not None:
+        new_graph_features['df1_log_r_a'] = (
+            np.log10(graph_features['df1_r_a_r_star'])
+            + new_graph_features['stellar_log_r_star'])
+    else:
+        raise ValueError('Cannot find DF1 scale radius')
+
+    # parse DF2 parameters
+    if graph_features.get('df2_r_a') is not None:
+        new_graph_features['df2_log_r_a'] = np.log10(graph_features['df2_r_a'])
+    elif graph_features.get('df2_r_a_r_dm') is not None:
+        new_graph_features['df2_log_r_a'] = (
+            np.log10(graph_features['df2_r_a_r_dm'])
+            + new_graph_features['dm_log_r_dm'])
+    elif graph_features.get('df2_r_a_r_star') is not None:
+        new_graph_features['df2_log_r_a'] = (
+            np.log10(graph_features['df2_r_a_r_star'])
+            + new_graph_features['stellar_log_r_star'])
+    else:
+        raise ValueError('Cannot find DF2 scale radius')
+
+    # normalize by the stellar radius
+    if norm_rstar:
+        for k in ['dm_log_r_dm', 'df1_log_r_a', 'df2_log_r_a']:
             new_graph_features[k] -= new_graph_features['stellar_log_r_star']
         new_graph_features['dm_log_rho_0'] -= (
             new_graph_features['stellar_log_r_star'] * 3)

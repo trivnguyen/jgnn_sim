@@ -130,13 +130,11 @@ def main(config: config_dict.ConfigDict,):
     num_stars = np.array([len(x) for x in processed_node_features['pos']])
     processed_graph_features['num_stars'] = num_stars
 
-    print(num_galaxies, 'galaxies after preprocessing')
-
     for k in processed_node_features.keys():
         processed_node_features[k] = np.concatenate(processed_node_features[k])
 
     # calculate all relevant labels
-    processed_graph_features = utils.parse_graph_features(
+    processed_graph_features = utils.parse_graph_features_2beta(
         processed_graph_features, norm_rstar=config.norm_rstar)
 
     # write the dataset

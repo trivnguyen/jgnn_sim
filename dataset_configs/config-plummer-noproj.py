@@ -14,12 +14,12 @@ def get_config():
     config.projection = None
     config.num_projection = [1, ]
     config.use_proper_motions = False
-    config.min_v = 0.  # minimum ve`locity in km/s
+    config.min_v = 0.  # minimum velocity in km/s
     config.max_v = 1000.  # maximum velocity in km/s
-    config.min_vdisp = 1e-10  # minimum velocity dispersion in km/s
-    config.max_vdisp = 1e10   # maximum velocity dispersion in km/s
+    config.min_vdisp = 0  # minimum velocity dispersion in km/s
+    config.max_vdisp = 1000   # maximum velocity dispersion in km/s
     config.min_radius_rstar = 0.  # minimum radius in units of r_star
-    config.max_radius_rstar = 10   # maximum radius in units of r_star
+    config.max_radius_rstar = 100   # maximum radius in units of r_star
     config.min_radius_kpc = 0.  # minimum radius in kpc
     config.max_radius_kpc = 100   # maximum radius in kpc
     config.norm_rstar = False

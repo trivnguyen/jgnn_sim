@@ -31,7 +31,7 @@ stellar_density:
     - name: r_star_r_dm  # ratio of Plummer scale radius to DM scale radius
       dist: uniform
       min: 0.2
-      max: 1.0
+      max: 5.0
 
 distribution_function:
   type: QuasiSpherical  # Osipkov-Merrit velocity anisotropy

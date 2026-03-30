@@ -1,7 +1,7 @@
 galaxy:
   num_stars:
-    dist: poisson
-    mean: 100
+    dist: delta
+    value: 1000
 
 dm_potential:
   type: Spheroid
@@ -18,19 +18,19 @@ dm_potential:
       max: 2
     - name: r_dm  # the DM scale radius in kpc
       dist: log_uniform
-      min: 1.0e-2
+      min: 1.0e-3
       max: 1.0e+2
     - name: rho_0  # the density normalization in Msun / kpc^3
       dist: log_uniform
       min: 1.0e+3
-      max: 1.0e+10
+      max: 1.0e+11
 
 stellar_density:
   type: Plummer  # Plummer density
   parameters:
     - name: r_star_r_dm  # ratio of Plummer scale radius to DM scale radius
       dist: uniform
-      min: 0.2
+      min: 0.1
       max: 1.0
 
 distribution_function:
